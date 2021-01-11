@@ -1,0 +1,129 @@
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+
+/* ****************************
+ * This is part of KukaMaksoiApp program.
+ * Class includes LoginWIndow Graphical Interface codes.
+ * It extends from GuiDefault class.
+ */
+
+public class LoginWindowGui extends GuiDefault {
+
+	protected JButton loginButton;
+	protected JButton registerButton;
+	protected JTextField textLoginName;
+	protected JPasswordField passLogin;
+	protected JLabel lblLoginError;
+	
+	
+	LoginWindowGui()
+	{
+		loginButton = new JButton("Login");
+		registerButton = new JButton("Create new user account");
+		textLoginName = new JTextField("Username");
+		passLogin = new JPasswordField("Password");
+		lblLoginError = new JLabel("");
+	}
+	
+	protected void ShowLoginWndowGui()
+	{
+		loginButton.setBounds(200, 350, 150, 35);
+		loginButton.setBackground(colorGreen);
+		loginButton.setFont(fontBigButton);
+		loginButton.setForeground(colorBrown);
+		loginButton.setFocusable(false);
+		contentPane.add(loginButton);
+	
+		registerButton.setBounds(200, 400, 350, 35);
+		registerButton.setBackground(colorLightYellow);
+		registerButton.setFont(fontBigButton);
+		registerButton.setForeground(colorBrown);
+		registerButton.setFocusable(false);
+		contentPane.add(registerButton);
+		
+		textLoginName.setBounds(200, 200, 400, 35);
+		textLoginName.setBackground(colorLightYellow);
+		textLoginName.setForeground(colorBrown);
+		textLoginName.setFont(fontSmallButton);
+		contentPane.add(textLoginName);
+		
+		passLogin.setBounds(200, 250, 400, 35);
+		passLogin.setBackground(colorLightYellow);
+		passLogin.setForeground(colorBrown);
+		contentPane.add(passLogin);
+		
+		lblLoginError.setBounds(200, 300, 400, 50);
+		lblLoginError.setForeground(colorRed);
+		lblLoginError.setFont(fontErrorLbl);
+		lblLoginError.setVisible(false);
+		contentPane.add(lblLoginError);
+		
+		frame.setContentPane(contentPane);
+		
+		
+		textLoginName.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				textLoginName.setText(null);
+			}
+		});
+		
+		passLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				passLogin.setText(null);
+			}
+		});
+		
+		loginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				
+				
+				try {	
+					String user = textLoginName.getText();
+					String pass = String.copyValueOf(passLogin.getPassword());
+					boolean verifyLogin = MySQLUsers.VerifyLogin(user, pass);
+					
+//					System.out.println(verifyLogin);
+					if(verifyLogin == true)
+					{
+						HomePageWindowGui home = new HomePageWindowGui();
+						home.ShowHomePageWindowGui(user);
+						frame.dispose();
+					}
+					else
+					{
+//						lblLoginError.setVisible(true);
+					}
+				} catch (Exception e) {
+					System.out.println("Undefined error in LoginWindowGui class >> loginButton mouseListener >> verifying login. " + e);
+				}
+				
+				
+			}
+		});
+		
+		registerButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				CreateUserWindowGui create = new CreateUserWindowGui();
+				create.ShowCreateUserWIndowGui();
+			}
+		});
+		
+		
+	}
+	public void setLblLoginError(String errorMessage)
+		{
+			String message = errorMessage;
+			lblLoginError.setText(message);
+			lblLoginError.setVisible(true);
+		}
+}
