@@ -1,0 +1,90 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+class MySQLConnection {
+	
+	private static String userName;
+	private static String password;
+	private static String url;
+	private static Connection con;
+	private static Connection userCon;
+	
+	
+	/*
+	 * Connect to MySQL database
+	 */
+	private static void connectToDatabase()
+	{
+		try {
+			userName = "username";
+			password = "password";
+			url = "jdbc:mysql://localhost:3306/databaseName?serverTimezone=UTC";	//	?serverTimezone=UTC command solved a timezone error issue.
+			con = DriverManager.getConnection(url, userName, password);
+		} catch (java.sql.SQLException e)
+		{
+			System.out.println("SQL error in MySQLConnection class >> connect method. " + e);
+		} catch (Exception e)
+		{
+			System.out.println("Unable to connect event database. MySQLConnection class >> connect method." + e);
+		}
+	}
+	
+	//	get MySQL connection
+	protected static Connection getConnection() throws Exception
+		{
+			if (con == null)
+			{
+				connectToDatabase();
+			}
+			return con;
+		}
+	
+	
+	/*
+	 * Connect to MySQL Login database
+	 */
+	private static void connectToUsers()
+	{
+		try {
+			userName = "username";
+			password = "password";
+			url = "jdbc:mysql://localhost:3306/databaseName?serverTimezone=UTC";
+			userCon = DriverManager.getConnection(url, userName, password);
+		} catch (java.sql.SQLException e)
+		{
+			System.out.println("SQL error in MySQLConnection class >> connectToUsers() method. " + e);
+		} catch (Exception e)
+		{
+			System.out.println("Unable to connect users database. MySQLConnection class >> connectToUsers() method. " + e);
+		}
+	}
+	
+	protected static Connection getConnectionToUsers() throws Exception
+	{
+		if (userCon == null)
+		{
+			connectToUsers();
+		}
+		return userCon;
+	}
+	
+	
+	protected static Connection getUserCon() 
+	{
+		
+		try {
+			userName = "javaLoginDB";
+			password = "JavaLoginPassword";
+			url = "jdbc:mysql://localhost:3306/kukaMaksoiUsers?serverTimezone=UTC";
+			return DriverManager.getConnection(url, userName, password);
+		} catch (SQLException e)
+		{
+			System.out.println("SQL error in MySQLCOnnection class >> getUserCon() method. " + e);
+		}
+		return null;
+	}
+	
+
+	
+}	// End of MysqlConnection
