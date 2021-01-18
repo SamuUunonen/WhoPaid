@@ -1,0 +1,99 @@
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableColumnModel;
+
+public class GuiDefault {
+	
+	protected JFrame frame;
+	protected JPanel contentPane;
+	protected JTable table;
+	protected Color colorBrown;
+	protected Color colorRed;
+	protected Color colorLightGreen;
+	protected Color colorBlack;
+	protected Color colorLightYellow;
+	protected Color colorGreen;
+	protected Font fontBigButton;
+	protected Font fontSmallButton;
+	protected Font fontPlainLbl;
+	protected Font fontBoldLbl;
+	protected Font fontErrorLbl;
+	
+	
+	
+	GuiDefault()
+	{
+		frame = new JFrame();
+		contentPane = new JPanel();
+		colorBrown = new Color(121, 85, 72);
+		colorRed = new Color(241, 148, 138);
+		colorLightGreen = new Color(171, 235, 198);
+		colorBlack = new Color(77, 86, 86);
+		colorLightYellow = new Color(249, 231, 159);
+		colorGreen = new Color(40, 180, 99);
+		fontBigButton = new Font("Tahoma", Font.BOLD, 22);
+		fontSmallButton = new Font("Tahoma", Font.BOLD, 18);
+		fontPlainLbl = new Font("Tahoma", Font.PLAIN, 18);
+		fontBoldLbl = new Font("Tahoma", Font.BOLD, 20);
+		fontErrorLbl = new Font("Tahoma", Font.BOLD, 12);
+		
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(contentPane);
+		frame.setBounds(200, 200, 800, 600);
+		frame.setVisible(true);
+		
+		contentPane.setBackground(colorLightGreen);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(null);
+	}
+	
+	protected JTable tableDefault()
+	{
+		table = new JTable();
+		table.setRowMargin(2);
+		table.setRowHeight(20);
+		table.setEnabled(true);
+		table.setFocusable(false);
+		table.setRowSelectionAllowed(true);
+		table.setBackground(colorLightGreen);
+		table.setForeground(colorBlack);
+		table.setFont(fontPlainLbl);
+		table.setGridColor(colorBlack);
+		table.setSelectionBackground(colorLightYellow);
+		table.setSelectionForeground(colorGreen);
+		table.getTableHeader().setOpaque(false);
+		table.getTableHeader().setBackground(colorLightYellow);
+		table.getTableHeader().setForeground(colorBlack);
+		table.getTableHeader().setFont(fontSmallButton);
+		
+		return table;
+	}
+	
+	protected void tableColumnModel()
+	{
+		TableColumnModel tcm = table.getColumnModel();
+		tcm.getColumn(0).setPreferredWidth(40); tcm.getColumn(0).setMinWidth(35); tcm.getColumn(0).setMaxWidth(60);		// ID
+		tcm.getColumn(1).setPreferredWidth(180); tcm.getColumn(1).setMinWidth(100); tcm.getColumn(1).setMaxWidth(210);	// Tapahtuma
+		tcm.getColumn(2).setPreferredWidth(180); tcm.getColumn(2).setMinWidth(100); tcm.getColumn(2).setMaxWidth(210);	// Maksaja
+		tcm.getColumn(3).setPreferredWidth(60); tcm.getColumn(3).setMinWidth(50);	tcm.getColumn(3).setMaxWidth(80);	// Hinta
+		tcm.getColumn(4).setPreferredWidth(190); tcm.getColumn(4).setMinWidth(190); tcm.getColumn(4).setMaxWidth(190);	// Päiväys
+	}
+	
+}
+
+
+
+
+
+
