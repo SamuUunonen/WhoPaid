@@ -1,0 +1,164 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import com.mysql.cj.protocol.Resultset;
+
+public class MySQLUsers {
+
+	//	Attributes
+	private static String user;
+	private static String password;
+	private static String email;
+	private static ResultSet result;
+	private static PreparedStatement statement;
+	
+
+	protected static boolean VerifyLogin(String userName, String password) throws Exception
+	{
+		boolean verifyLogin = false;
+		boolean correctPassword, correctUserName;
+		
+		try {
+			correctPassword = false;
+			correctUserName = false;
+			Connection con = MySQLConnection.getConnectionToUsers();
+			PreparedStatement select = con.prepareStatement("SELECT userName, userPassword FROM users WHERE userName = " + "'" + userName + "'");
+			result = select.executeQuery();
+			
+			HashMap<String,String> loginInfo = new HashMap<String,String>();
+			
+			while (result.next())
+			{
+				loginInfo.put(result.getString("userName"),result.getString("userPassword"));
+			}
+			
+			if (loginInfo.containsKey(userName))
+			{
+				correctUserName = true;
+				if(loginInfo.get(userName).equals(password))
+				{
+					correctPassword = true;
+				}
+				else
+				{
+					correctPassword = false;
+					LoginWindowGui login = new LoginWindowGui();
+					login.ShowLoginWndowGui();
+					login.setLblLoginError("Invalid password!");
+				}
+			}
+			else
+			{
+				correctUserName = false;
+				
+			}
+			
+			if (correctPassword && correctUserName)
+			{
+				verifyLogin = true;
+			}
+
+			
+		}catch (Exception e)
+		{
+			System.out.println("Checking user failed. " + e);
+		}	
+		return verifyLogin;
+	}
+
+	
+	//	Add new user to database
+	protected static void insertUser(String userName, String userPassword, String userEmail) throws Exception
+	{
+		user = userName;
+		password = userPassword;
+		email = userEmail;
+		
+		try {
+			Connection userCon = MySQLConnection.getConnectionToUsers();
+			PreparedStatement insert = userCon.prepareStatement("INSERT INTO users (username, userpassword, email) VALUES ('" + user + "', '" + password + "' , '" + email + "')");
+			insert.executeUpdate();
+			
+			MySQLDatabase.createTable(user);
+		} catch (java.sql.SQLIntegrityConstraintViolationException e)
+		{
+			System.out.println("SQL integriy constraint violation error in MySQLUsers class >> insertUser() method. " + e);
+		}
+		catch (SQLException e)
+		{
+			System.out.println("SQL error in MySQLUsers class >> insertUser() method. " + e);
+		}
+	}
+	
+  
+	// Check if username exists
+	protected static boolean checkUserName(String userName) throws Exception
+	{
+		boolean userExists; // If user exists = true, if not = false.
+		
+		String checkUserName = getUserName("SELECT userName FROM users WHERE userName ='" + userName + "'");
+		if (userName.equalsIgnoreCase(checkUserName) && !checkUserName.equals(null))
+		{				
+			return userExists = true;
+		}
+		else			
+		{
+			return userExists = false;
+		}
+	}
+	
+	
+	private static String getUserName(String query) throws Exception
+	{
+		result = null;
+		statement = null;
+		String userName;
+		try {
+			Connection userCon = MySQLConnection.getConnectionToUsers();
+			statement = userCon.prepareStatement(query);
+			result = statement.executeQuery();
+			ArrayList<String> array = new ArrayList<String>();
+			while (result.next())
+			{
+				array.add(result.getString("userName"));
+			}
+			
+			if (!array.isEmpty())
+				{
+					userName = array.get(0).toString();
+					return userName;
+				}
+			else
+			{
+				return null;
+			}
+		} catch (SQLException e)
+		{
+			System.out.println("SQL error in MySQLUsers class >> getQuery() method. " + e);
+		} catch (Exception e)
+		{
+			System.out.println("Undefined error in MySQLUsers class >> getQuery() method. " + e);
+		}
+		finally
+		{
+			try {
+				result.close();
+				statement.close();
+			} catch (SQLException e) {
+				System.out.println("SQL error in MySQLUsers class >> getQuery() method. Closing ResultSet and PreparedStatement. ");
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+}
+
+
+
+
