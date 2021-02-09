@@ -1,0 +1,117 @@
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+public class EventHistoryWindowGui extends GuiDefault {
+
+	private JButton btnBack;
+	private JLabel lblSearchEvent;
+	private JTextField textEventSearch;
+	private JButton btnSearch;
+	private JScrollPane scrollPane;
+	
+	EventHistoryWindowGui()
+	{
+		btnBack = new JButton("Takaisin");
+		lblSearchEvent = new JLabel("Tapahtuma:");
+		textEventSearch = new JTextField();
+		btnSearch = new JButton("Etsi");
+		scrollPane = new JScrollPane(super.tableDefault());
+	}
+	
+	protected void ShowEventHistoryWindowGui(String userLoggedIn)
+	{
+		
+		btnBack.setBackground(colorLightYellow);
+		btnBack.setFont(fontBigButton);
+		btnBack.setBounds(600, 20, 150, 50);
+		btnBack.setFocusable(false);
+		contentPane.add(btnBack);
+		
+		lblSearchEvent.setFont(fontSmallButton);
+		lblSearchEvent.setBounds(25	, 50, 115, 25);
+		contentPane.add(lblSearchEvent);
+		
+		textEventSearch.setBounds(154, 50, 200, 25);
+		contentPane.add(textEventSearch);
+		
+		btnSearch.setBounds(154, 110, 150, 30);
+		btnSearch.setBackground(colorGreen);
+		btnSearch.setFont(fontBigButton);
+		btnSearch.setForeground(colorBrown);
+		btnSearch.setFocusable(false);
+		btnSearch.setEnabled(true);
+		contentPane.add(btnSearch);
+		
+
+		super.table.setModel(MySQLDatabase.getEventHistory(userLoggedIn));
+		super.tableColumnModel();
+		table.setAutoCreateRowSorter(true);
+		
+		scrollPane.setBounds(25, 150, 750, 400);
+		scrollPane.setBackground(colorLightGreen);
+		scrollPane.setForeground(colorLightYellow);
+		scrollPane.setWheelScrollingEnabled(true);
+		scrollPane.getViewport().setBackground(colorLightGreen);
+		contentPane.add(scrollPane);
+		
+		
+		
+		frame.setContentPane(contentPane);
+		
+		
+		/* ****************
+		 * Mouse Listeners
+		 * ****************/
+		
+		btnSearch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				table.setModel(MySQLDatabase.searchEventsByEventName(userLoggedIn, getTextEventSearch()));
+				tableColumnModel();
+			}
+		});
+		
+		
+		btnBack.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				HomePageWindowGui home = new HomePageWindowGui();
+				home.ShowHomePageWindowGui(userLoggedIn);
+				frame.dispose();
+			}
+		});
+		
+	}
+	
+	
+	/* *******************
+	 * Getters and setters
+	 * *******************/
+	
+
+
+	public String getTextEventSearch() {
+		return textEventSearch.getText();
+	}
+
+	public void setTextEventSearch(String textEventSearch) {
+		this.textEventSearch.setText(textEventSearch);
+	}
+
+	public String getTextPayerSearch() {
+		return textPayerSearch.getText();
+	}
+
+	public void setTextPayerSearch(String textPayerSearch) {
+		this.textPayerSearch.setText(textPayerSearch);
+	}
+	
+	
+	
+	
+}
