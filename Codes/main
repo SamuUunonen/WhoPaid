@@ -1,0 +1,15 @@
+
+
+public class KukaMaksoiApp {
+
+	public static void main(String[] args) throws Exception {
+		
+		LoginWindowGui login = new LoginWindowGui();
+		login.ShowLoginWndowGui();
+
+	}	//	End of the main
+	
+}	//	End of KukaMaksoiApp
+
+
+
