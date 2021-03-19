@@ -1,4 +1,4 @@
-# WhoPaid
+# JavaApp
 My first personal Java project.
 Application save information to MySQL database.
 
